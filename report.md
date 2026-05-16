@@ -358,7 +358,7 @@ The complete Google Colab implementation includes:
 * saved outputs and logs
 
 Google Drive Folder:
-https://drive.google.com/drive/folders/1JRRDJJfL8GadZKqLlOrN9a9axBuA9XKA?usp=sharing
+[https://drive.google.com/drive/folders/1JRRDJJfL8GadZKqLlOrN9a9axBuA9XKA?usp=sharing](https://drive.google.com/drive/folders/18OnwDg1re-HRRi3NxY0z8zSU-ZSPvP3b)
 
 ---
 
