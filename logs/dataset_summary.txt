@@ -1,0 +1,7 @@
+Dataset Summary and Inspection
+========================================
+
+split  num_images  num_label_files  num_crater_boxes  num_empty_labels
+train          98               98               681                 9
+valid          26               26               202                 2
+ test          19               19               151                 0

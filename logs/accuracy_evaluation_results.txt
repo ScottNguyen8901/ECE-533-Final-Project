@@ -1,0 +1,7 @@
+Quantitative Accuracy Evaluation
+========================================
+
+             model    mAP50  mAP50_95    mAP75  precision   recall
+           yolov8n 0.563337  0.317953 0.309745   0.317953 0.381457
+faster_rcnn_crater 0.533804  0.287058 0.297832   0.287058 0.358278
+  retinanet_crater 0.575287  0.293967 0.287411   0.293967 0.370861

@@ -1,0 +1,12 @@
+Crater Detector Model Comparison
+================================
+
+Number of test images: 19
+Device: cuda
+GPU: Tesla T4
+
+Comparison Summary:
+             model  training_log_found  training_total_time_sec  training_avg_epoch_time_sec  training_final_loss  training_best_loss  num_test_images  total_detections  avg_detections_per_image  inference_total_time_sec  inference_avg_time_per_image_sec  inference_fps
+faster_rcnn_crater                True              1098.359428                    21.967189             0.081283            0.063145               19               135                  7.105263                  1.592319                          0.083806      11.932279
+  retinanet_crater                True              1008.029006                    20.160580             0.086646            0.086646               19               127                  6.684211                  1.437856                          0.075677      13.214115
+           yolov8n                True               182.787466                     3.655749             1.305340            1.200210               19               125                  6.578947                  0.804036                          0.042318      23.630779
