@@ -12,56 +12,84 @@ Spring 2026
 
 # Abstract
 
-This project investigates the use of modern deep learning object detection architectures for automated lunar crater detection using annotated planetary surface imagery. Automated crater detection is an important problem within planetary science, aerospace imaging, autonomous navigation, and terrain analysis. Manual crater annotation is time-consuming and difficult to scale across large planetary datasets, motivating the need for robust computer vision-based detection systems.
+This project investigates the use of modern deep learning object detection architectures for automated lunar crater detection using annotated planetary surface imagery. Automated crater detection is an important problem within planetary science, aerospace imaging, autonomous navigation, terrain analysis, and planetary surface mapping. Manual crater annotation is time-consuming and difficult to scale across large planetary datasets, motivating the need for efficient computer vision-based crater detection systems.
 
-Three deep learning object detection architectures were implemented and evaluated:
+Three modern object detection architectures were implemented and evaluated:
 
 * YOLOv8 Nano
 * Faster R-CNN
 * RetinaNet
 
-The project workflow included:
+The experimental workflow included:
 
 * dataset preparation
 * dataset inspection
+* annotation verification
 * ground truth visualization
 * model training
 * prediction visualization
-* quantitative accuracy evaluation
-* computational performance analysis
+* quantitative evaluation
+* computational timing analysis
 
-All experiments were implemented in Google Colab using GPU acceleration. Comparative evaluation demonstrated that YOLOv8 achieved the strongest balance between crater detection accuracy, inference speed, and computational efficiency.
+All experiments were implemented using Google Colab with NVIDIA Tesla T4 GPU acceleration. Comparative evaluation demonstrated that YOLOv8 achieved the strongest balance between crater localization quality, inference speed, and computational efficiency.
 
 ---
 
-# Motivation
+# Introduction
 
-Planetary crater detection is an important task within:
+Planetary crater detection is an important problem in planetary science and aerospace imaging applications. Accurate crater localization supports planetary mapping, terrain hazard assessment, robotic navigation, and autonomous aerospace exploration systems.
 
-* planetary mapping
-* surface analysis
-* terrain hazard assessment
-* autonomous aerospace navigation
-* scientific geological analysis
+Traditional crater detection methods often rely on manual inspection or classical image processing algorithms. These approaches become increasingly difficult when applied to large-scale planetary datasets due to computational complexity and annotation workload.
 
-Traditional crater identification methods often rely on manual inspection or classical image processing techniques, both of which become increasingly difficult when applied to large-scale planetary datasets.
+Recent advances in deep learning and computer vision have enabled modern object detection architectures to achieve strong performance across a wide variety of image recognition and localization tasks. This project investigates whether modern object detection architectures can effectively generalize to planetary crater detection using annotated lunar and Martian surface imagery.
 
-Recent advances in deep learning and computer vision have enabled object detection architectures to achieve strong performance across a wide variety of image recognition tasks. This project explores whether these same architectures can effectively generalize to crater detection using lunar and Martian surface imagery.
+This project additionally explores the tradeoffs between:
 
-A key motivation of this work is understanding the tradeoffs between:
-
-* detection accuracy
+* crater localization accuracy
 * computational efficiency
+* training duration
 * inference speed
 * model complexity
 
-for potential use in aerospace and planetary exploration systems.
+for future aerospace and planetary analysis applications.
+
+The major contributions of this project include:
+
+* development of a complete crater detection pipeline
+* implementation of multiple modern object detection architectures
+* quantitative and qualitative model comparison
+* computational performance analysis
+* prediction visualization generation
+
+---
+
+# Background
+
+Modern object detection architectures can generally be categorized into:
+
+* single-stage detectors
+* two-stage detectors
+
+YOLOv8 is a lightweight single-stage object detector designed for fast inference and efficient runtime performance. YOLO architectures directly predict bounding boxes and object classifications from the input image in a single forward pass.
+
+Faster R-CNN is a two-stage detector that first generates region proposals before performing object classification and localization refinement. Two-stage detectors often achieve strong localization capability but introduce higher computational overhead.
+
+RetinaNet is a single-stage detector that introduces focal loss to improve learning stability under class imbalance conditions. Focal loss reduces the influence of easy negative examples during training and improves detection robustness for sparse object distributions.
+
+These architectures were selected because they provide meaningful comparisons between:
+
+* lightweight detectors
+* region-based detectors
+* focal-loss-based detectors
+
+under consistent crater detection conditions.
 
 ---
 
 # Dataset
 
 Dataset source:
+
 https://www.kaggle.com/datasets/lincolnzh/martianlunar-crater-detection-dataset
 
 The dataset contains annotated lunar and Martian surface imagery formatted for YOLO-based object detection workflows.
@@ -73,45 +101,68 @@ The dataset includes:
 * testing images
 * crater bounding box annotations
 
-The dataset was organized into standard supervised learning splits and used consistently across all evaluated detection architectures to ensure fair experimental comparison.
+Each annotation file contains crater bounding box coordinates used for supervised object detection training.
+
+The dataset was organized into standard supervised learning splits and used consistently across all evaluated architectures to ensure fair experimental comparison.
 
 ---
 
 # Dataset Summary and Inspection
 
-Prior to model training, the dataset was inspected to verify:
+Prior to training, the dataset was inspected to verify:
 
 * dataset split integrity
 * image counts
 * annotation counts
 * crater bounding box formatting
+* empty annotation files
 * compatibility with object detection pipelines
 
-Ground truth crater annotations were visualized to confirm correct bounding box alignment across the dataset.
+Ground truth crater annotations were visualized to verify correct crater alignment across the dataset.
+
+## Dataset Split Summary
+
+| Dataset Split | Purpose                                             |
+| ------------- | --------------------------------------------------- |
+| Training      | Model parameter optimization                        |
+| Validation    | Performance monitoring during training              |
+| Testing       | Prediction visualization and qualitative evaluation |
+
+---
 
 ## Image Distribution by Dataset Split
 
 ![Dataset Image Distribution](images/dataset_image_distribution.png)
 
+Figure: Distribution of images across training, validation, and testing splits.
+
+---
+
 ## Crater Annotation Distribution
 
 ![Dataset Annotation Distribution](images/dataset_annotation_distribution.png)
+
+Figure: Distribution of crater annotations across dataset splits.
 
 ---
 
 # Ground Truth Bounding Box Visualization
 
-Ground truth crater annotations were visualized prior to training to validate annotation quality and dataset consistency.
+Ground truth crater annotations were visualized before training to verify annotation quality and crater alignment consistency.
 
-These examples demonstrate the labeled crater structures used during supervised object detection training.
+These examples demonstrate the crater structures used during supervised object detection training.
 
 ## Ground Truth Example 1
 
 ![Ground Truth Example 1](images/ground_truth_examples/ground_truth_example_1.jpg)
 
+---
+
 ## Ground Truth Example 2
 
 ![Ground Truth Example 2](images/ground_truth_examples/ground_truth_example_2.jpg)
+
+---
 
 ## Ground Truth Example 3
 
@@ -139,13 +190,15 @@ The experimental workflow included:
 1. dataset preparation
 2. dataset inspection
 3. annotation verification
-4. model training
-5. prediction generation
-6. prediction visualization
-7. quantitative evaluation
-8. computational timing analysis
+4. ground truth visualization
+5. model training
+6. prediction generation
+7. prediction visualization
+8. quantitative evaluation
+9. timing analysis
+10. comparative analysis
 
-The models were trained and evaluated using Google Colab with NVIDIA Tesla T4 GPU acceleration.
+All experiments were implemented using Google Colab with NVIDIA Tesla T4 GPU acceleration.
 
 The project additionally logged:
 
@@ -159,29 +212,65 @@ throughout the experimental pipeline.
 
 ---
 
+# High-Level Training Workflow
+
+```text
+Load crater dataset
+Verify image and annotation integrity
+Generate ground truth visualizations
+
+For each detection model:
+    Initialize pretrained detector
+    Train model
+    Save weights and logs
+    Generate crater predictions
+    Measure training and inference timing
+
+Compare localization quality
+Generate plots and evaluation summaries
+```
+
+---
+
+# Model Configuration
+
+| Model        | Type         | Main Purpose                   |
+| ------------ | ------------ | ------------------------------ |
+| YOLOv8 Nano  | Single-stage | Fast crater detection          |
+| Faster R-CNN | Two-stage    | Strong localization quality    |
+| RetinaNet    | Single-stage | Balanced detection performance |
+
+---
+
 # YOLOv8
 
-YOLOv8 is a lightweight single-stage object detector optimized for fast inference and real-time detection tasks. The architecture predicts bounding boxes and object classifications directly from the input image in a single forward pass.
-
-Advantages:
+YOLOv8 is a lightweight single-stage object detector optimized for:
 
 * fast training
 * fast inference
 * efficient GPU utilization
-* lightweight architecture
+* lightweight deployment
 
-YOLOv8 Nano was selected due to its balance between computational efficiency and detection capability.
+YOLOv8 Nano was selected because it provides a strong balance between crater detection capability and computational efficiency.
+
+Training configuration:
+
+* image size: 640 × 640
+* batch size: 8
+* epochs: 50
+* pretrained weights initialization
 
 ---
 
 # Faster R-CNN
 
-Faster R-CNN is a two-stage object detection architecture that first generates region proposals before performing classification and localization.
+Faster R-CNN is a two-stage object detection architecture that first generates region proposals before performing object classification and localization refinement.
 
 Advantages:
 
 * strong localization quality
-* high detection precision
+* accurate region proposals
+* high-quality detections
 
 Limitations:
 
@@ -189,30 +278,31 @@ Limitations:
 * higher computational overhead
 * increased training complexity
 
-Faster R-CNN served as a high-capacity comparison baseline for crater localization performance.
+Faster R-CNN served as a high-capacity localization baseline for crater detection comparison.
 
 ---
 
 # RetinaNet
 
-RetinaNet is a single-stage detector that introduces focal loss to improve learning under class imbalance conditions.
+RetinaNet is a single-stage detector that introduces focal loss to improve learning under sparse object distributions and class imbalance conditions.
 
 Advantages:
 
 * stable training
-* improved handling of sparse object distributions
-* intermediate computational complexity
+* improved handling of sparse crater distributions
+* balanced computational complexity
 
-RetinaNet provided an additional comparison point between lightweight YOLO-based detectors and heavier region-based architectures.
+RetinaNet provided an intermediate comparison point between lightweight YOLO detectors and heavier region-based detectors.
 
 ---
 
 # Results
 
-The trained crater detection models were evaluated using:
+The trained crater detection architectures were evaluated using:
 
 * prediction visualization
 * mAP-based accuracy metrics
+* recall
 * training duration
 * inference speed
 * computational efficiency
@@ -224,7 +314,7 @@ YOLOv8 demonstrated the strongest balance between:
 * training speed
 * inference speed
 
-Faster R-CNN produced high-quality localization results but required significantly greater computational overhead.
+Faster R-CNN produced strong localization results but required significantly greater computational overhead.
 
 RetinaNet demonstrated intermediate performance between YOLOv8 and Faster R-CNN.
 
@@ -232,7 +322,7 @@ RetinaNet demonstrated intermediate performance between YOLOv8 and Faster R-CNN.
 
 # Prediction Bounding Box Comparison
 
-The following examples compare crater predictions generated by each trained detection architecture.
+The following examples compare crater predictions generated by each trained architecture.
 
 ## Ground Truth
 
@@ -244,17 +334,32 @@ The following examples compare crater predictions generated by each trained dete
 
 ![YOLO Prediction](images/prediction_examples/yolo_010_png.rf.fcf5e274562ee69a325f9d7a0b30767f.jpg)
 
+Observation:
+
+* strong crater localization
+* efficient runtime performance
+
 ---
 
 ## Faster R-CNN Prediction
 
 ![Faster R-CNN Prediction](images/prediction_examples/faster_rcnn_010_png.rf.fcf5e274562ee69a325f9d7a0b30767f.jpg)
 
+Observation:
+
+* strong localization quality
+* slower inference performance
+
 ---
 
 ## RetinaNet Prediction
 
 ![RetinaNet Prediction](images/prediction_examples/retinanet_010_png.rf.fcf5e274562ee69a325f9d7a0b30767f.jpg)
+
+Observation:
+
+* balanced performance
+* moderate computational complexity
 
 ---
 
@@ -269,21 +374,57 @@ The crater detection architectures were quantitatively evaluated using:
 * inference speed
 * computational timing metrics
 
-## Accuracy Comparison
+---
+
+# Overall Model Comparison
+
+| Model        | Speed  | Efficiency | Localization |
+| ------------ | ------ | ---------- | ------------ |
+| YOLOv8       | High   | High       | Strong       |
+| Faster R-CNN | Low    | Low        | Very Strong  |
+| RetinaNet    | Medium | Medium     | Strong       |
+
+---
+
+# Accuracy Comparison
 
 ![Accuracy Comparison](images/accuracy_metrics_comparison.png)
 
-## Training Time Comparison
+Figure: Accuracy metric comparison across evaluated crater detection architectures.
+
+---
+
+# Training Time Comparison
 
 ![Training Time Comparison](images/training_time_comparison.png)
 
-## Inference Time Comparison
+Figure: Training duration comparison across evaluated models.
+
+---
+
+# Inference Time Comparison
 
 ![Inference Time Comparison](images/inference_time_comparison.png)
 
-## Average Inference Time Per Image
+Figure: Inference runtime comparison across evaluated models.
+
+---
+
+# Average Inference Time Per Image
 
 ![Average Inference Time](images/avg_inference_time_per_image.png)
+
+Figure: Average inference runtime per image across evaluated architectures.
+
+---
+
+# Subjective Results
+
+| Model        | Subjective Observation                            |
+| ------------ | ------------------------------------------------- |
+| YOLOv8       | Best runtime-performance balance                  |
+| Faster R-CNN | Strong localization but computationally expensive |
+| RetinaNet    | Balanced performance across evaluation categories |
 
 ---
 
@@ -293,23 +434,30 @@ The experimental results demonstrated that modern deep learning object detection
 
 YOLOv8 provided the strongest overall balance between:
 
-* detection accuracy
+* crater localization quality
 * computational efficiency
 * training speed
 * inference speed
 
-The lightweight single-stage detector achieved rapid training and efficient inference while maintaining strong crater localization capability.
+The lightweight single-stage architecture achieved strong crater localization while maintaining efficient runtime performance.
 
-Faster R-CNN demonstrated strong localization quality but introduced significantly greater computational overhead due to the region proposal stage. Although the architecture can provide high-quality detections, the additional complexity reduces its suitability for real-time aerospace deployment scenarios.
+Faster R-CNN demonstrated strong localization quality due to the region proposal stage; however, the additional complexity introduced significantly greater computational overhead.
 
 RetinaNet demonstrated intermediate performance between YOLOv8 and Faster R-CNN. The focal loss mechanism improved stability under sparse crater distributions while maintaining moderate computational requirements.
 
-The project additionally demonstrated the effectiveness of deep learning detection frameworks for:
+The project additionally demonstrated the effectiveness of deep learning-based crater detection for:
 
 * planetary surface analysis
 * aerospace imaging
 * autonomous terrain understanding
 * crater localization tasks
+
+Main limitations included:
+
+* limited dataset size
+* overlapping crater boundaries
+* varying terrain illumination
+* small crater localization difficulty
 
 ---
 
@@ -327,44 +475,42 @@ The full workflow included:
 * quantitative evaluation
 * computational performance analysis
 
-Among the evaluated architectures, YOLOv8 demonstrated the best overall balance between crater detection accuracy, computational efficiency, and inference speed.
+Among the evaluated architectures, YOLOv8 demonstrated the strongest balance between crater detection accuracy, computational efficiency, and inference speed.
 
-The results demonstrate that modern deep learning object detection architectures provide an effective and scalable solution for automated planetary crater analysis and future aerospace vision applications.
+The results demonstrate that modern deep learning object detection architectures provide an effective and scalable solution for automated planetary crater analysis and future aerospace imaging applications.
 
-Future work could further improve detection performance through:
+Future work may include:
 
 * larger crater datasets
 * higher-resolution imagery
-* advanced augmentation techniques
-* larger object detection architectures
+* advanced augmentation methods
 * segmentation-based crater detection
-* deployment onto embedded aerospace hardware platforms
+* embedded aerospace deployment optimization
 
 ---
 
 # Google Colab Implementation
 
-This GitHub repository provides a high-level summary of the project results and experimental findings.
-
 The complete Google Colab implementation includes:
 
-* full training pipelines
+* dataset preparation scripts
 * environment setup instructions
-* dataset download scripts
+* model training pipelines
 * evaluation scripts
-* visualization generation
+* prediction visualization generation
 * computational timing analysis
-* model comparison workflows
+* comparison workflows
 * saved outputs and logs
 
 Google Drive Folder:
-[https://drive.google.com/drive/folders/1JRRDJJfL8GadZKqLlOrN9a9axBuA9XKA?usp=sharing](https://drive.google.com/drive/folders/18OnwDg1re-HRRi3NxY0z8zSU-ZSPvP3b)
+
+https://drive.google.com/drive/folders/18OnwDg1re-HRRi3NxY0z8zSU-ZSPvP3b
 
 ---
 
 # Repository Structure
 
-```text id="aqm5l7"
+```text
 ECE-533-Final-Project/
 ├── images/
 │   ├── ground_truth_examples/
@@ -374,17 +520,13 @@ ECE-533-Final-Project/
 │   ├── dataset_annotation_distribution.png
 │   ├── dataset_image_distribution.png
 │   ├── inference_time_comparison.png
-│   ├── prediction_bounding_box_examples.png
 │   └── training_time_comparison.png
 ├── logs/
 │   ├── accuracy_evaluation_results.csv
 │   ├── dataset_summary.csv
-│   ├── faster_rcnn_crater_training_log.csv
-│   ├── ground_truth_visualization_summary.csv
 │   ├── inference_comparison_log.csv
 │   ├── model_comparison_summary.csv
-│   ├── retinanet_crater_training_log.csv
-│   └── yolo_training_log.csv
+│   └── training_logs/
 └── report.md
 ```
 
@@ -403,3 +545,6 @@ ECE-533-Final-Project/
 
 4. PyTorch Documentation
    https://pytorch.org/
+
+5. KaggleHub Documentation
+   https://github.com/Kaggle/kagglehub
