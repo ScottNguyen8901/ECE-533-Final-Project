@@ -1,8 +1,0 @@
-path: /content/drive/MyDrive/ece-533-final-project/data/martianlunar-crater-detection-dataset/craters
-
-train: train/images
-val: valid/images
-test: test/images
-
-names:
-  0: crater
